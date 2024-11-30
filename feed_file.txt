@@ -1,0 +1,80 @@
+Feed back quip:
+
+25/11/2024 Monday:
+
+Topic: Billing and Cost analysis using AWS cost-explorer service.
+
+Analyzing of each and every service corresponding cost and API call cost as well individually by using FILTERS, for Service, select services(CloudWatch, VPC, EC2,......).
+
+I have analyzed the CW-GMD(Get Metric Data) API call cost. Based on the cost, we can recognise which api call is charging more, if it is required to us then we can keep that, other wise we have to do a caller analysis  if it is performing by third party applications by raising the caller analysis request with the internal team. 
+
+Based on the “UsageType”, we have to select which “CloudWatch subfeature”  is charging more. 
+
+
+26/11/2024 Tuesday:
+I have replicated cloud agent set up in the windows ec2 machine to push the custom metrics with a high resolution.
+tried pushing config of the file into the SSM parameter store.
+Analysed how the power shell command fetch the config file and update the fields into the TOML file. 
+checking cloudwatch endpoint connectivity from the ec2 machine to push metrics into the cloudWatch.
+
+
+27/11/2024Wednes day: 
+
+case on alarm , 
+customer’s alarm is went to LARM state but it is not delivering the notification to the subscribed email.
+I have checked alarm history and it is went to the ALARM state and it is able to invoke the notification resources as well.so, i have checked SNS metrics for that alarm and i found that MessageDeliveryFailures in the metrics. which is indicating that issue is more related to the SNS topics.
+
+I went on chime call for one more case and the customer wants to create metric to display in widgets in CW dash boards by following a hierarchy (broker, virtualhost, queue, Metrics). in order to achieve that, i have suggested customer to create a variable in the dashboard by selecting the dimension as “VirtualHost“ and i asked the customer to create one more variable by selecting the dimension as the broker as dimension. 
+
+Which will gives a facility to customer to select the drop down form the dash boards, by selecting the hierarchy, it will display metrics of the every queue under that “VirtualHost, Broker” queue.
+
+
+28/11/2024 Thursday:
+
+I have learnt about the alarm evaluation on based on the data points availability and how the Treat Missing data works. and how the alarm consider the data points in the metrics with in the given period.
+
+I have learned about the token bucket algorithm for API call rating.  mechanism which efficiently manages a buffer of tokens, allowing unused capacity to be saved for future API requests. 
+
+I have checked with the limitations and concerns of the archive feature of the EventBridge bus. 
+
+29/11/2024 Friday:
+I got MAC and customer is using the alarm on canary metrics by using the dimension as CanaryName. and i have checked the alarm configuration. based on that , i have checked the canary metrics and there is data point to breach.
+
+
+
+
+
+
+
+ELB:
+
+
+25/11/2024 Monday:
+
+How to troubleshoot  the issue  if the target group is unhealthy. to do that, we have to check that, port number matching, 
+server latency , Web server running inside the instances.
+
+I have MAC regarding canary detecting the 5xx errors on ALB. I have checked the metrics and didn’t find any data points available for the canaries. but the customer alarm is going to alarm state . so I have asked customer to monitor the ALB metrics and share the ALB access logs as well. 
+
+26/11/2024 Tuesday:
+I have checked ATLAS Internal way point log with (111:connection refused error while connecting to the target) error indicates that  ALB is unable to connect with the backend instances. 
+
+Analyzing each and every field of ALB Access logs. meaning of “ -1,-1,-1”  in the access logs.
+Trouble shooting intermittent timeout issues of ALB.
+
+
+27/11/2024 Wednesday :
+
+NLB is a LoadBalaner which work at Layer 4, it is just a pass through and just route the traffic to the backend(target).
+Using security group we can manipulate the inbound traffic by specifying the IP and port number, security group name(associated resources only allowed), CIDR range also.
+- SG associated with the LB should not be associated with the targets.
+
+28/11/2024 Thursday:
+topic: NLB ip preservation 
+In NLB: if Client IP_preservation is enabled, client ip is preserved till request reached to back end server. and how the client IP will be lost. if we won’t enable the client IP preservation.
+
+29/11/2024 Friday:
+topic: NLB traffic routing
+NLB is provisioned in 4 different AZs and associated with the target. if the Cross Zone is disabled, then it can route the traffic to healthy instance and we will get the 4 ip as well for the NLB. 
+
+If the CrossZone is disabled , NLB cant route the traffic to the healthy instance. with in the enabled AZ all the instances unhealthy the LB fails open. Fail open is allow traffic to all targets in all enabled Availability Zones, regardless of health status.
