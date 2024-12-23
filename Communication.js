@@ -115,3 +115,164 @@ exports.handler = async (event) => {
         };
     }
 };
+
+
+
+
+
+
+
+
+
+
+const express = require('express');
+const mongoose = require('mongoose');
+const Event = require('./models/Event');
+const bodyParser = require('body-parser');
+
+// Express app setup
+const app = express();
+const port = 3000;
+
+// Middleware to parse incoming JSON data
+app.use(bodyParser.json());
+
+// API Key for authentication (you'll configure this key in your API Gateway)
+const API_KEY = 'your-secret-api-key'; // Replace with your actual API key
+
+// Middleware to validate API key
+app.use((req, res, next) => {
+  const apiKey = req.header('x-api-key');
+  if (apiKey !== API_KEY) {
+    return res.status(403).json({ message: 'Forbidden: Invalid API Key' });
+  }
+  next();
+});
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/eventbridge', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+// Route to handle events from AWS EventBridge (through API Gateway)
+app.post('/event', async (req, res) => {
+  try {
+    // Extract event data from the request
+    const { eventName, eventData } = req.body;
+
+    if (!eventName || !eventData) {
+      return res.status(400).json({ message: 'Missing eventName or eventData' });
+    }
+
+    // Create a new event document using the event data
+    const newEvent = new Event({
+      eventName,
+      eventData,
+    });
+
+    // Save the event to MongoDB
+    await newEvent.save();
+
+    // Respond with success
+    res.status(200).json({ message: 'Event saved successfully', event: newEvent });
+  } catch (error) {
+    console.error('Error processing event:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+
+
+
+
+
+
+
+const express = require('express');
+const mongoose = require('mongoose');
+const Event = require('./models/Event');
+const bodyParser = require('body-parser');
+
+// Express app setup
+const app = express();
+const port = 3000;
+
+// Middleware to parse incoming JSON data
+app.use(bodyParser.json());
+
+// API Key for authentication
+const API_KEY = 'your-secret-api-key'; // Replace with your actual API key
+
+// Middleware to validate API key
+app.use((req, res, next) => {
+  const apiKey = req.header('x-api-key');
+  if (apiKey !== API_KEY) {
+    return res.status(403).json({ message: 'Forbidden: Invalid API Key' });
+  }
+  next();
+});
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/eventbridge', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+// Route to handle events from AWS EventBridge
+app.post('/event', async (req, res) => {
+  try {
+    // Extract event data from the request
+    const { eventName, eventData } = req.body;
+
+    if (!eventName || !eventData) {
+      return res.status(400).json({ message: 'Missing eventName or eventData' });
+    }
+
+    // Create a new event document using the event data
+    const newEvent = new Event({
+      eventName,
+      eventData,
+    });
+
+    // Save the event to MongoDB
+    await newEvent.save();
+
+    // Respond with success
+    res.status(200).json({ message: 'Event saved successfully', event: newEvent });
+  } catch (error) {
+    console.error('Error processing event:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+
+
+
+
+
+// models/Event.js
+const mongoose = require('mongoose');
+
+const eventSchema = new mongoose.Schema({
+  eventName: String,
+  eventData: mongoose.Schema.Types.Mixed,
+  eventTimestamp: { type: Date, default: Date.now },
+});
+
+const Event = mongoose.model('Event', eventSchema);
+
+module.exports = Event;
+
