@@ -1,0 +1,16 @@
+{
+    "logs": {
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "\\\\amznfsxivl7nyqh.directory.dev.scs.internal\\Hrml\\production\\log01\\error.log",
+                        "log_group_name": "hxm-dev-wfa-stage-logs-group",
+                        "log_stream_name": "stage_wstwebapp",
+                        "retention_in_days": 180
+                    }
+                ]
+            }
+        }
+    }
+}
